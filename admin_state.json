@@ -1,0 +1,5 @@
+{
+  "superAdmin": "your_github_username",
+  "admins": ["your_github_username"],
+  "pending": []
+}
