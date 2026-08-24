@@ -220,7 +220,7 @@ const GIST_ID  = "5d05c97bf838adbdb8dfef7f55e96a99";   // <<< 你的 GitHub Gist
      "https://cors-anywhere.herokuapp.com"
    例：const PROXY = "https://ghproxy.cc";   // 拼出来 = https://ghproxy.cc/https://api.github.com/gists/xxx
    ===================================================================== */
-const PROXY = "";   // <<< 若方案一报错，把这里改成上面任一代理域名，不用改别的地方
+const PROXY = "https://ghproxy.cc";   // <<< 若方案一报错，把这里改成上面任一代理域名，不用改别的地方
 const API_BASE = (PROXY ? PROXY.replace(/\/$/,"") + "/" : "") + "https://api.github.com";
 /* 管理密码：访客只有输入此密码才能增删改。改成你自己记得住的任意字符串。 */
 const ADMIN_PASSWORD = "cxg2026";
