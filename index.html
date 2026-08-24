@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>明星与星神 ID 搜索</title>
+<title>宸星电竞ID 搜索</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -14,10 +14,8 @@
     padding: 24px 16px;
   }
   .container { max-width: 1100px; margin: 0 auto; }
-
   header { text-align: center; margin-bottom: 20px; }
   header h1 { font-size: 26px; font-weight: 700; color: #34495e; letter-spacing: 1px; }
-
   /* 状态条 */
   .status-bar {
     display: flex; gap: 10px; align-items: center; justify-content: center;
@@ -28,7 +26,6 @@
   .status-dot.offline { background: #e67e22; }
   .status-dot.error { background: #e74c3c; }
   .btn-link { background: none; border: none; color: #5b8def; cursor: pointer; font-size: 13px; text-decoration: underline; }
-
   /* 管理员面板 */
   .admin-panel {
     background: #fff; border-radius: 12px; padding: 16px 20px;
@@ -43,7 +40,6 @@
   }
   .admin-panel input:focus { border-color: #8e44ad; }
   .admin-panel .hint { font-size: 12px; color: #999; width: 100%; }
-
   /* 搜索区 */
   .search-box {
     background: #fff; border-radius: 12px; padding: 20px;
@@ -68,7 +64,6 @@
   .btn-danger { background: #e74c3c; }
   .btn-danger:hover { opacity: .9; }
   .btn-sm { padding: 6px 12px; font-size: 13px; }
-
   /* 添加表单（仅管理员可见） */
   .add-form {
     background: #fff; border-radius: 12px; padding: 18px 20px;
@@ -82,7 +77,6 @@
   .add-form input:focus, .add-form select:focus { border-color: #5b8def; }
   .add-form input.name-input { flex: 1; min-width: 180px; }
   .add-form input.id-input  { width: 160px; }
-
   /* 分类标签 */
   .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
   .tab {
@@ -93,7 +87,6 @@
   .tab.active { background: #5b8def; color: #fff; border-color: #5b8def; }
   .tab:hover:not(.active) { background: #eef2ff; }
   .tab .num { font-size: 11px; opacity: .8; margin-left: 4px; }
-
   /* 表格 */
   .table-wrap { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); overflow: hidden; }
   table { width: 100%; border-collapse: collapse; }
@@ -111,33 +104,29 @@
   .cat-星尊 { background: #2980b9; }
   .cat-颜值 { background: #e84393; }
   .cat-星魁 { background: #16a085; }
-
   .id-cell { font-family: "SF Mono", Menlo, Consolas, monospace; color: #34495e; }
   .actions { display: flex; gap: 6px; flex-wrap: nowrap; align-items: center; white-space: nowrap; }
   .actions .btn { flex: 0 0 auto; }
   .empty { text-align: center; padding: 40px; color: #999; font-size: 14px; }
-
   .edit-row input, .edit-row select { padding: 7px 10px; border: 1px solid #dfe4ea; border-radius: 6px; font-size: 13px; width: 100%; }
   .edit-row select { width: auto; }
-
   .toast {
     position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px);
     background: #323232; color: #fff; padding: 10px 22px; border-radius: 8px; font-size: 14px;
     opacity: 0; pointer-events: none; transition: all .3s; z-index: 999;
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
   .count { font-size: 13px; color: #888; margin-bottom: 8px; }
   .badge-new { animation: flash 1.6s ease; }
   @keyframes flash { 0% { background: #fff7d6; } 100% { background: transparent; } }
+  .del-confirm {margin-left:8px;display:inline-flex;align-items:center;gap:6px;color:#e74c3c;font-size:12px;}
 </style>
 </head>
 <body>
 <div class="container">
   <header>
-    <h1>🌟 明星与星神 ID 搜索</h1>
+    <h1>🌟 宸星电竞ID 搜索</h1>
   </header>
-
   <!-- 云端同步状态 -->
   <div class="status-bar">
     <span class="status-dot" id="statusDot"></span>
@@ -146,22 +135,19 @@
     <span id="adminTag" style="display:none;color:#8e44ad;font-weight:600;">· 管理员模式</span>
     <button class="btn-link" id="btnLogout" style="display:none;">退出</button>
   </div>
-
   <!-- 管理员登录面板 -->
   <div class="admin-panel" id="adminPanel">
     <span class="label">🔒 管理员登录</span>
     <input id="adminPwd" type="password" placeholder="管理密码" style="width:160px;">
     <button class="btn btn-primary btn-sm" id="btnPwdLogin">登录</button>
-    <span class="hint">登录后即可添加 / 修改 / 删除，所有改动会实时同步到云端，其他访客刷新即可看到。</span>
+    <span class="hint">登录后即可添加 / 修改 / 删除，改动通过Vercel代理同步云端。</span>
   </div>
-
   <!-- 搜索栏 -->
   <div class="search-box">
-    <input type="text" id="searchInput" placeholder="🔍 输入名称或 ID 进行模糊搜索（清空即返回当前分类表）...">
+    <input type="text" id="searchInput" placeholder="🔍 输入名称或 ID ">
     <button class="btn btn-primary" id="btnSearch">搜索</button>
     <button class="btn btn-danger" id="btnClear">清除</button>
   </div>
-
   <!-- 添加新条目（仅管理员可见） -->
   <div class="add-form" id="addForm">
     <select id="addCat">
@@ -175,7 +161,6 @@
     <input class="id-input" id="addId" placeholder="ID">
     <button class="btn btn-success" id="btnAdd">+ 添加</button>
   </div>
-
   <!-- 分类标签 -->
   <div class="tabs" id="tabs">
     <div class="tab" data-cat="明星">明星<span class="num" id="num-明星"></span></div>
@@ -185,7 +170,6 @@
     <div class="tab" data-cat="星魁">星魁<span class="num" id="num-星魁"></span></div>
   </div>
   <div class="count" id="count"></div>
-
   <!-- 分类表格 -->
   <div class="table-wrap">
     <table>
@@ -201,28 +185,16 @@
     </table>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
-
 <script>
-/* =====================================================================
-   云端配置 —— 你需要按「使用说明」填入以下两项（见 README / 注释）
-   ===================================================================== */
-const GIST_ID  = "5d05c97bf838adbdb8dfef7f55e96a99";   // <<< 你的 GitHub Gist ID（Gist 网址末尾那段字符串）
-/* =====================================================================
-   【方案一】代理前缀（核心：只填「代理域名」不要带 /gists，代码会自动拼接）
-   —— 若你所在的网络直连 api.github.com 被 CORS / 重置，把下面改成能用的代理；
-   —— 留空 "" 表示不走代理，直接请求官方 API（GitHub Pages 域名下通常可直连）。
-   常见可用代理（挑一个能 ping 通的，末尾不要带斜杠）：
-     "https://gh-proxy.com"
-   例：const PROXY = "https://ghproxy.cc";   // 拼出来 = https://ghproxy.cc/https://api.github.com/gists/xxx
-   ===================================================================== */
-const PROXY = "https://gh-proxy.com";   // <<< 若方案一报错，把这里改成上面任一代理域名，不用改别的地方
-const API_BASE = (PROXY ? PROXY.replace(/\/$/,"") + "/" : "") + "https://api.github.com";
-/* 管理密码：访客只有输入此密码才能增删改。改成你自己记得住的任意字符串。 */
+/* =============================================
+   ✅ 修改这里：填入你的Vercel接口域名，末尾不要斜杠
+   ============================================= */
+const VERCEL_BASE = "https://cxg-id-table.vercel.app/api";
+// 前端仅用于页面登录校验；真正写入校验放在Vercel后端环境变量！前后端密码保持一致
 const ADMIN_PASSWORD = "cxg2026";
 
-/* 初始数据（首次从云端拉取为空 / 出错时作为本地兜底） */
+/* 初始数据（Vercel接口异常时本地兜底） */
 const INITIAL = [
   ["明星","Cxz明星-小七","81714906"],["明星","Cxg明星-阿亮","81681876"],["明星","Cxg明星-拖鞋","81682896"],
   ["明星","Cxg明星-龙龙","81412078"],["明星","Cxg明星-克制","81682238"],["明星","Cxg明星-小小怪","82362122"],
@@ -254,80 +226,61 @@ const INITIAL = [
   ["颜值","Cxg颜值-漫漫","83570884"],["颜值","Cxg颜值-小佳","83570013"],["颜值","Cxg颜值-宋粢","81734975"],
   ["颜值","Cxg颜值-小艺TvT","82144856"],["颜值","Cxg颜值-冰冷歆","83365688"]
 ];
-
 const CATS = ["明星","星神","星尊","颜值","星魁"];
-const STORAGE_KEY = "cxg_id_db_v1";      // 本地缓存键
-const TOKEN_KEY   = "cxg_admin_token_v1"; // 本地缓存：GitHub Token（可选）
+const STORAGE_KEY = "cxg_id_db_v1";
 
-/* =====================================================================
-   数据层：云端（GitHub Gist）为主，本地 localStorage 为缓存兜底
-   ===================================================================== */
 let DB = [];
 let currentCat = CATS[0];
 let currentKeyword = "";
 let isAdmin = false;
 
-/* ---- 云端读写 ---- */
-// 从 Gist 拉取数据；未配置 GIST_ID 时退化成本地缓存
+/* ========== Vercel代理接口读写 ========== */
 async function fetchFromCloud(){
-  if(!GIST_ID) return null;
-  const token = localStorage.getItem(TOKEN_KEY) || "";
-  const headers = { "Accept": "application/vnd.github+json" };
-  if(token) headers["Authorization"] = "Bearer " + token;
-  // 尝试顺序：代理（若配置了）→ 官方直连；任一成功即返回
-  const urls = [];
-  if(PROXY) urls.push(API_BASE.replace(/\/$/,"") + "/gists/" + GIST_ID);
-  urls.push("https://api.github.com/gists/" + GIST_ID);
-  let lastErr;
-  for(const url of urls){
-    try {
-      const res = await fetch(url, { headers });
-      if(!res.ok) throw new Error("Gist 读取失败：" + res.status);
-      const gist = await res.json();
-      // 数据存在第一个文件（data.json）的 content 里
-      const file = Object.values(gist.files || {})[0];
-      if(!file || !file.content) return [];
-      const data = JSON.parse(file.content);
-      return Array.isArray(data) ? data : null;
-    } catch(e){ lastErr = e; console.warn("[fetchFromCloud] " + url + " 失败：", e); }
+  try{
+    const res = await fetch(`${VERCEL_BASE}/read`);
+    const json = await res.json();
+    if(json.ok && Array.isArray(json.data)){
+      return json.data;
+    }
+    return null;
+  }catch(e){
+    console.error("读取云端失败:",e);
+    return null;
   }
-  console.warn(lastErr); return null;
 }
 
-// 把当前 DB 写回 Gist（会更新整个 Gist 的第一个文件）
 async function saveToCloud(db){
-  if(!GIST_ID) { localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); return false; }
-  const token = localStorage.getItem(TOKEN_KEY) || "";
-  if(!token){ localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); return false; }
-  const headers = { "Accept": "application/vnd.github+json", "Content-Type": "application/json" };
-  headers["Authorization"] = "Bearer " + token;
-  try {
-    // 先取现有文件结构，保留文件名
-    const getRes = await fetch(API_BASE + "/gists/" + GIST_ID, { headers });
-    const gist = await getRes.json();
-    const fileName = Object.keys(gist.files || { "data.json": {} })[0] || "data.json";
-    const res = await fetch(API_BASE + "/gists/" + GIST_ID, {
-      method: "PATCH",
-      headers,
-      body: JSON.stringify({ files: { [fileName]: { content: JSON.stringify(db, null, 2) } } })
+  if(!isAdmin) return false;
+  try{
+    const res = await fetch(`${VERCEL_BASE}/write`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        password: ADMIN_PASSWORD,
+        data: db
+      })
     });
-    if(!res.ok) throw new Error("Gist 写入失败：" + res.status);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); // 同时更新本地缓存
-    return true;
-  } catch(e){
-    console.warn(e);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); // 离线也先存本地
+    const ret = await res.json();
+    if(ret.ok){
+      saveLocal(db);
+      return true;
+    }else{
+      toast(ret.message || "云端保存被拒绝");
+      saveLocal(db);
+      return false;
+    }
+  }catch(err){
+    toast("云端同步失败，已保存本地浏览器");
+    saveLocal(db);
     return false;
   }
 }
 
-/* 本地缓存读写（Gist 未配置 / 离线时的兜底） */
+/* 本地缓存读写 */
 function loadLocal(){ return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
 function saveLocal(db){ localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); }
 
-/* =====================================================================
-   管理员权限
-   ===================================================================== */
+/* ========== 管理员权限 ========== */
 function setAdmin(online){
   isAdmin = online;
   document.getElementById("addForm").classList.toggle("show", online);
@@ -338,9 +291,7 @@ function setAdmin(online){
 }
 function checkPassword(pwd){ return pwd === ADMIN_PASSWORD; }
 
-/* =====================================================================
-   DOM
-   ===================================================================== */
+/* ========== DOM工具 ========== */
 const tbody = document.getElementById("tbody");
 const countEl = document.getElementById("count");
 const searchInput = document.getElementById("searchInput");
@@ -354,9 +305,7 @@ function setStatus(state, text){
 function esc(s){ return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 function getCatClass(c){ return "cat-" + c; }
 
-/* =====================================================================
-   渲染（仅当前分类）
-   ===================================================================== */
+/* ========== 渲染 ========== */
 function render(highlightName){
   let rows = DB.slice().filter(r => r[0] === currentCat);
   if(currentKeyword){
@@ -389,9 +338,7 @@ function render(highlightName){
   }).join("");
 }
 
-/* =====================================================================
-   搜索（输入变化实时响应）
-   ===================================================================== */
+/* ========== 搜索 ========== */
 function applyKeyword(kw){
   currentKeyword = kw;
   if(kw === ""){ searchInput.value = ""; }
@@ -404,9 +351,7 @@ searchInput.addEventListener("keydown", e => { if(e.key === "Enter") doSearch();
 document.getElementById("btnSearch").addEventListener("click", doSearch);
 document.getElementById("btnClear").addEventListener("click", clearSearch);
 
-/* =====================================================================
-   分类标签
-   ===================================================================== */
+/* ========== 分类标签 ========== */
 document.getElementById("tabs").addEventListener("click", e => {
   const t = e.target.closest(".tab"); if(!t) return;
   document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
@@ -416,9 +361,7 @@ document.getElementById("tabs").addEventListener("click", e => {
   render();
 });
 
-/* =====================================================================
-   添加（管理员）
-   ===================================================================== */
+/* ========== 添加 ========== */
 document.getElementById("btnAdd").addEventListener("click", addEntry);
 async function addEntry(){
   if(!isAdmin) return toast("仅管理员可添加");
@@ -433,12 +376,10 @@ async function addEntry(){
   document.getElementById("addId").value = "";
   switchCat(cat);
   render(name);
-  toast(ok ? "已添加并同步到云端（已切换到 " + cat + "）" : "已添加（离线，已存本地）");
+  toast(ok ? "已添加并同步云端" : "已添加（离线本地）");
 }
 
-/* =====================================================================
-   删除（行内确认，三按钮同行）
-   ===================================================================== */
+/* ========== 删除 ========== */
 function delEntry(i){
   if(!isAdmin){ toast("仅管理员可删除"); return; }
   const name = DB[i] ? DB[i][1] : "";
@@ -456,7 +397,6 @@ function delEntry(i){
     if(!bar){
       bar = document.createElement("span");
       bar.className = "del-confirm";
-      bar.style.cssText = "margin-left:8px;display:inline-flex;align-items:center;gap:6px;color:#e74c3c;font-size:12px;";
       bar.innerHTML = `确定删除「${esc(name)}」吗？<button class="btn btn-danger btn-sm" onclick="delEntry(${i})">确认</button><button class="btn btn-sm" style="background:#95a5a6" onclick="cancelDel(${i})">取消</button>`;
       const td = tr.querySelector(".actions");
       if(td) td.appendChild(bar);
@@ -465,9 +405,7 @@ function delEntry(i){
 }
 function cancelDel(i){ render(); }
 
-/* =====================================================================
-   修改（管理员；保存后自动归入对应分类）
-   ===================================================================== */
+/* ========== 修改 ========== */
 function startEdit(i){
   if(!isAdmin) return toast("仅管理员可修改");
   const r = DB[i]; if(!r) return;
@@ -504,11 +442,9 @@ async function saveEdit(i){
   const ok = await saveToCloud(DB);
   switchCat(cat);
   render(name);
-  toast(ok ? "已更新并同步云端（已切换到 " + cat + "）" : "已更新（离线）");
+  toast(ok ? "已更新并同步云端" : "已更新（离线）");
 }
 function cancelEdit(){ render(); }
-
-/* 切换分类 Tab */
 function switchCat(cat){
   currentCat = cat;
   document.querySelectorAll(".tab").forEach(x => {
@@ -517,9 +453,7 @@ function switchCat(cat){
   currentKeyword = ""; searchInput.value = "";
 }
 
-/* =====================================================================
-   复制（所有人可用）
-   ===================================================================== */
+/* ========== 复制ID ========== */
 function copyId(id){
   if(!id){ toast("该条目无 ID"); return; }
   if(navigator.clipboard && window.isSecureContext){
@@ -533,9 +467,7 @@ function fallbackCopy(id){
   document.body.removeChild(ta);
 }
 
-/* =====================================================================
-   提示
-   ===================================================================== */
+/* ========== Toast提示 ========== */
 let toastTimer;
 function toast(msg){
   const t = document.getElementById("toast");
@@ -544,26 +476,20 @@ function toast(msg){
   toastTimer = setTimeout(() => t.classList.remove("show"), 1800);
 }
 
-/* =====================================================================
-   初始化：先取云端数据，失败则用本地缓存/初始数据
-   ===================================================================== */
+/* ========== 初始化 ========== */
 async function init(){
   setStatus("offline", "正在连接云端…");
-  // 优先云端
   const cloud = await fetchFromCloud();
   if(cloud && Array.isArray(cloud) && cloud.length){
     DB = cloud;
-    saveLocal(DB); // 更新本地缓存
-    setStatus("online", "云端已同步 · 所有人看到的数据一致");
-  } else {
-    // 云端不可用 / 未配置：用本地缓存或初始数据
+    saveLocal(DB);
+    setStatus("online", "✅Vercel云端已同步，所有人共用一份数据");
+  }else{
     const local = loadLocal();
     DB = local.length ? local : INITIAL.slice();
     if(!local.length) saveLocal(DB);
-    setStatus(GIST_ID ? "error" : "offline",
-      GIST_ID ? "云端暂不可用，当前为本地数据（检查 Gist/Token 配置）" : "尚未配置云端，数据仅保存在本浏览器（请按注释配置 Gist）");
+    setStatus("error", "⚠️云端接口访问失败，当前使用本地浏览器数据");
   }
-  // 首次去重
   dedupe();
   switchCat(CATS[0]);
   render();
@@ -574,7 +500,7 @@ function dedupe(){
   if(uniq.length !== DB.length){ DB = uniq; saveLocal(DB); }
 }
 
-/* 管理员登录相关事件 */
+/* 管理员登录事件 */
 document.getElementById("btnLogin").addEventListener("click", () => {
   document.getElementById("adminPanel").classList.add("open");
   document.getElementById("adminPwd").focus();
