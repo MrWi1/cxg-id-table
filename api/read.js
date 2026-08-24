@@ -1,4 +1,3 @@
-// api/read.js
 export default async function handler(req, res) {
   const GIST_ID = process.env.GIST_ID;
   const GITHUB_PAT = process.env.GITHUB_PAT;
@@ -14,7 +13,7 @@ export default async function handler(req, res) {
     const gist = await resp.json();
     const file = Object.values(gist.files)[0];
     const list = JSON.parse(file.content);
-    // ✅全部使用半角减号
+
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
