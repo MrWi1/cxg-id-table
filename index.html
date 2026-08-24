@@ -205,14 +205,26 @@
 <div class="toast" id="toast"></div>
 
 <script>
+/* =====================================================================
+   云端配置 —— 你需要按「使用说明」填入以下两项（见 README / 注释）
+   ===================================================================== */
+const GIST_ID  = "";   // <<< 你的 GitHub Gist ID（Gist 网址末尾那段字符串）
+/* =====================================================================
+   【方案一】代理前缀（核心：只填「代理域名」不要带 /gists，代码会自动拼接）
+   —— 若你所在的网络直连 api.github.com 被 CORS / 重置，把下面改成能用的代理；
+   —— 留空 "" 表示不走代理，直接请求官方 API（GitHub Pages 域名下通常可直连）。
+   常见可用代理（挑一个能 ping 通的，末尾不要带斜杠）：
+     "https://ghproxy.cc"
+     "https://ghp.ci"
+     "https://gh-proxy.com"
+     "https://cors-anywhere.herokuapp.com"
+   例：const PROXY = "https://ghproxy.cc";   // 拼出来 = https://ghproxy.cc/https://api.github.com/gists/xxx
+   ===================================================================== */
+const PROXY = "";   // <<< 若方案一报错，把这里改成上面任一代理域名，不用改别的地方
+const API_BASE = (PROXY ? PROXY.replace(/\/$/,"") + "/" : "") + "https://api.github.com";
+/* 管理密码：访客只有输入此密码才能增删改。改成你自己记得住的任意字符串。 */
+const ADMIN_PASSWORD = "cxg2026";
 
-// 配置区
-const SUPER_ADMIN = "MrWi1";
-const ADMIN_PASSWORD = "104618";
-// 强制使用同仓库 JSON 文件（彻底告别代理和 Gist 限制）
-const STORAGE_MODE = "local";
-const DATA_FILE = "data.json";
- 
 /* 初始数据（首次从云端拉取为空 / 出错时作为本地兜底） */
 const INITIAL = [
   ["明星","Cxz明星-小七","81714906"],["明星","Cxg明星-阿亮","81681876"],["明星","Cxg明星-拖鞋","81682896"],
