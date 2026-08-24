@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>宸星电竞ID 搜索</title>
+<title>明星与星神 ID 搜索</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -135,7 +135,7 @@
 <body>
 <div class="container">
   <header>
-    <h1>🌟宸星电竞ID 搜索</h1>
+    <h1>🌟 明星与星神 ID 搜索</h1>
   </header>
 
   <!-- 云端同步状态 -->
@@ -157,7 +157,7 @@
 
   <!-- 搜索栏 -->
   <div class="search-box">
-    <input type="text" id="searchInput" placeholder="🔍 输入名称或 ID ">
+    <input type="text" id="searchInput" placeholder="🔍 输入名称或 ID 进行模糊搜索（清空即返回当前分类表）...">
     <button class="btn btn-primary" id="btnSearch">搜索</button>
     <button class="btn btn-danger" id="btnClear">清除</button>
   </div>
@@ -209,10 +209,21 @@
    云端配置 —— 你需要按「使用说明」填入以下两项（见 README / 注释）
    ===================================================================== */
 const GIST_ID  = "5d05c97bf838adbdb8dfef7f55e96a99";   // <<< 你的 GitHub Gist ID（Gist 网址末尾那段字符串）
+/* =====================================================================
+   【方案一】代理前缀（核心：只填「代理域名」不要带 /gists，代码会自动拼接）
+   —— 若你所在的网络直连 api.github.com 被 CORS / 重置，把下面改成能用的代理；
+   —— 留空 "" 表示不走代理，直接请求官方 API（GitHub Pages 域名下通常可直连）。
+   常见可用代理（挑一个能 ping 通的，末尾不要带斜杠）：
+     "https://ghproxy.cc"
+     "https://ghp.ci"
+     "https://gh-proxy.com"
+     "https://cors-anywhere.herokuapp.com"
+   例：const PROXY = "https://ghproxy.cc";   // 拼出来 = https://ghproxy.cc/https://api.github.com/gists/xxx
+   ===================================================================== */
+const PROXY = "";   // <<< 若方案一报错，把这里改成上面任一代理域名，不用改别的地方
+const API_BASE = (PROXY ? PROXY.replace(/\/$/,"") + "/" : "") + "https://api.github.com";
 /* 管理密码：访客只有输入此密码才能增删改。改成你自己记得住的任意字符串。 */
-const ADMIN_PASSWORD = "";
-const API_BASE = 'https://cors-anywhere.herokuapp.com/https://api.github.com/gists/';
-const SUPER_ADMIN = "MrWi1";
+const ADMIN_PASSWORD = "cxg2026";
 
 /* 初始数据（首次从云端拉取为空 / 出错时作为本地兜底） */
 const INITIAL = [
@@ -266,18 +277,24 @@ async function fetchFromCloud(){
   const token = localStorage.getItem(TOKEN_KEY) || "";
   const headers = { "Accept": "application/vnd.github+json" };
   if(token) headers["Authorization"] = "Bearer " + token;
-  try {
-    const res = await fetch(API_BASE + "/gists/" + GIST_ID, { headers });
-    if(!res.ok) throw new Error("Gist 读取失败：" + res.status);
-    const gist = await res.json();
-    // 数据存在第一个文件（data.json）的 content 里
-    const file = Object.values(gist.files || {})[0];
-    if(!file || !file.content) return [];
-    const data = JSON.parse(file.content);
-    return Array.isArray(data) ? data : null;
-  } catch(e){
-    console.warn(e); return null;
+  // 尝试顺序：代理（若配置了）→ 官方直连；任一成功即返回
+  const urls = [];
+  if(PROXY) urls.push(API_BASE.replace(/\/$/,"") + "/gists/" + GIST_ID);
+  urls.push("https://api.github.com/gists/" + GIST_ID);
+  let lastErr;
+  for(const url of urls){
+    try {
+      const res = await fetch(url, { headers });
+      if(!res.ok) throw new Error("Gist 读取失败：" + res.status);
+      const gist = await res.json();
+      // 数据存在第一个文件（data.json）的 content 里
+      const file = Object.values(gist.files || {})[0];
+      if(!file || !file.content) return [];
+      const data = JSON.parse(file.content);
+      return Array.isArray(data) ? data : null;
+    } catch(e){ lastErr = e; console.warn("[fetchFromCloud] " + url + " 失败：", e); }
   }
+  console.warn(lastErr); return null;
 }
 
 // 把当前 DB 写回 Gist（会更新整个 Gist 的第一个文件）
