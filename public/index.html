@@ -234,12 +234,11 @@ let currentCat = CATS[0];
 let currentKeyword = "";
 let isAdmin = false;
 
-/* ========== Vercel代理接口读写 ========== */
 async function fetchFromCloud(){
   try{
     const res = await fetch(`${VERCEL_BASE}/read`);
     const json = await res.json();
-    if(json.ok && Array.isArray(json.data)){
+    if(json.ok && json.data && Array.isArray(json.data.idList)){
       return json.data;
     }
     return null;
