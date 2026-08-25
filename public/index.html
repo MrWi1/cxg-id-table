@@ -476,27 +476,36 @@ function toast(msg){
 }
 
 /* ========== 初始化 ========== */
-async function init(){
-  setStatus("offline", "正在连接云端…");
-  const cloud = await fetchFromCloud();
-  if(cloud && Array.isArray(cloud) && cloud.length){
-    DB = cloud;
-    saveLocal(DB);
-    setStatus("online", "✅Vercel云端已同步，所有人共用一份数据");
-  }else{
-    const local = loadLocal();
-    DB = local.length ? local : INITIAL.slice();
-    if(!local.length) saveLocal(DB);
-    setStatus("error", "⚠️云端接口访问失败，当前使用本地浏览器数据");
+async function saveToCloud(db){
+  if(!isAdmin) return false;
+  try{
+    const res = await fetch(`${VERCEL_BASE}/write`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        password: ADMIN_PASSWORD,
+        data: {
+          superAdmin: cloudFull?.superAdmin ?? "MrWi11",
+          admins: cloudFull?.admins ?? ["MrWi11"],
+          pending: cloudFull?.pending ?? [],
+          idList: db
+        }
+      })
+    });
+    const ret = await res.json();
+    if(ret.ok){
+      saveLocal(db);
+      return true;
+    }else{
+      toast(ret.message || "云端保存被拒绝");
+      saveLocal(db);
+      return false;
+    }
+  }catch(err){
+    toast("云端同步失败，已保存本地浏览器");
+    saveLocal(db);
+    return false;
   }
-  dedupe();
-  switchCat(CATS[0]);
-  render();
-}
-function dedupe(){
-  const seen = new Set(); const uniq = [];
-  for(const r of DB){ const k = r[1]; if(seen.has(k)) continue; seen.add(k); uniq.push(r); }
-  if(uniq.length !== DB.length){ DB = uniq; saveLocal(DB); }
 }
 
 /* 管理员登录事件 */
