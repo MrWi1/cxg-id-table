@@ -125,7 +125,7 @@
 <body>
 <div class="container">
   <header>
-    <h1>🌟 宸星电竞ID 搜索</h1>
+    <h1> 宸星电竞ID 搜索</h1>
   </header>
   <!-- 云端同步状态 -->
   <div class="status-bar">
@@ -479,20 +479,20 @@ function toast(msg){
 let cloudFull = null; // 保存云端返回完整对象 {superAdmin,admins,pending,idList}
 
 async function init(){
-  setStatus("offline", "正在连接云端…");
+  setStatus("offline", "");
   const cloud = await fetchFromCloud();
   console.log("cloud=", cloud);
   if(cloud && Array.isArray(cloud.idList) && cloud.idList.length){
     cloudFull = cloud;
     DB = cloud.idList;
     saveLocal(DB);
-    setStatus("online", "✅Vercel云端已同步，所有人共用一份数据");
+    setStatus("online", "");
   }else{
     cloudFull = null;
     const local = loadLocal();
     DB = local.length ? local : INITIAL.slice();
     if(!local.length) saveLocal(DB);
-    setStatus("error", "⚠云端接口访问失败，当前使用本地浏览器数据");
+    setStatus("error", "");
   }
   dedupe();
   switchCat(CATS[0]);
