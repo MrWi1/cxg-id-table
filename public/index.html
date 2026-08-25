@@ -476,6 +476,7 @@ function toast(msg){
 }
 
 /* ========== 初始化 ========== */
+let cloudFull = null; // 保存云端返回完整对象 {superAdmin,admins,pending,idList}
 async function saveToCloud(db){
   if(!isAdmin) return false;
   try{
